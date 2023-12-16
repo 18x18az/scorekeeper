@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Country {
+  id: Int!
+  name: String!
+  regions: [Region!]
+}
+
+type Program {
+  code: String!
+  id: Int!
+  name: String!
+  seasons: [Season!]!
+}
+
+type Query {
+  countries: [Country!]!
+  country(id: Int!): Country!
+  countryByName(name: String!): Country!
+  program(id: Int!): Program!
+  programByCode(code: String!): Program!
+  programs: [Program!]!
+  regions: [Region!]!
+}
+
+type Region {
+  country: Country!
+  id: Int!
+  name: String!
+}
+
+type Season {
+  id: Int!
+  isCurrent: Boolean!
+  name: String!
+  program: Program!
+  yearEnd: Int!
+  yearStart: Int!
+}
