@@ -32,6 +32,7 @@ export class SeasonService {
   ) {}
 
   async onApplicationBootstrap (): Promise<void> {
+    await this.programs.hydratePrograms()
     this.logger.log('Checking for current seasons')
     const programs = await this.programs.findAll()
 

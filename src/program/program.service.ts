@@ -26,7 +26,7 @@ export class ProgramService {
     private readonly re: ReService
   ) {}
 
-  async onApplicationBootstrap (): Promise<void> {
+  async hydratePrograms (): Promise<void> {
     const existing = await this.programRepo.find()
 
     // check if we have all the programs we need
