@@ -24,6 +24,10 @@ export class Season {
   @Field(type => Int)
     yearEnd: number
 
+  @Column()
+  @Field(type => Int)
+    programId: number
+
   @ManyToOne(() => Program, program => program.seasons)
   @JoinColumn({ name: 'programId' })
   @Field(type => Program)

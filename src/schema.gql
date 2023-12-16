@@ -19,10 +19,16 @@ type Query {
   countries: [Country!]!
   country(id: Int!): Country!
   countryByName(name: String!): Country!
+  findAllProgram: [Program!]!
+  findAllSeason: [Season!]!
+  findOneProgram: Program!
+  findOneSeason: Season!
   program(id: Int!): Program!
   programByCode(code: String!): Program!
   programs: [Program!]!
   regions: [Region!]!
+  season(id: Int!): Season!
+  seasons: [Season!]!
 }
 
 type Region {
@@ -36,6 +42,7 @@ type Season {
   isCurrent: Boolean!
   name: String!
   program: Program!
+  programId: Int!
   yearEnd: Int!
   yearStart: Int!
 }

@@ -55,4 +55,16 @@ export class SeasonService {
     const newSeason = this.seasonRepo.create({ program, ...createSeasonInput })
     return await this.seasonRepo.save(newSeason)
   }
+
+  async findAll (): Promise<Season[]> {
+    return await this.seasonRepo.find()
+  }
+
+  async findOne (id: number): Promise<Season> {
+    return await this.seasonRepo.findOneByOrFail({ id })
+  }
+
+  async findByProgram (programId: number): Promise<Season[]> {
+    return await this.seasonRepo.find({ where: { programId } })
+  }
 }
