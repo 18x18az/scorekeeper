@@ -117,6 +117,7 @@ type Team {
   organization: String!
   program: Program!
   region: Region!
+  regionId: Int!
   registered: Boolean!
   robotName: String
 }

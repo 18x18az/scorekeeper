@@ -66,4 +66,9 @@ export class SeasonService {
   async findCurrent (): Promise<Season[]> {
     return await this.seasonRepo.find({ where: { isCurrent: true } })
   }
+
+  async getCurrentSeason (programId: number): Promise<Season> {
+    const current = await this.seasonRepo.findOneByOrFail({ isCurrent: true, programId })
+    return current
+  }
 }

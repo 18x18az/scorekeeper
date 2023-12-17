@@ -8,6 +8,10 @@ import { RegionService } from '../region/region.service'
 import { FindTeamsArgs } from './dto/find-teams.args'
 import { Team } from './team.entity'
 import { Grade } from './dto/team.enums'
+import { Event } from '../event/event.entity'
+import { EventResponse } from '../event/dto/event.response'
+import { SeasonService } from '../season/season.service'
+import { EventService } from '../event/event.service'
 
 interface TeamResponse {
   id: number
@@ -27,10 +31,12 @@ export class TeamService {
     @InjectRepository(Team) private readonly teamRepo: Repository<Team>,
     private readonly re: ReService,
     private readonly programService: ProgramService,
-    private readonly regionService: RegionService
+    private readonly regionService: RegionService,
+    private readonly seasonService: SeasonService,
+    private readonly eventService: EventService
   ) {}
 
-  async getTeam (program: number, number: string): Promise<Team> {
+  private async getTeam (program: number, number: string): Promise<Team> {
     const team = (await this.re.paginated<TeamResponse>('teams', { number: [number], program: [program] }))[0]
 
     this.logger.log(`Creating team ${team.number}`)
@@ -50,6 +56,21 @@ export class TeamService {
     })
 
     return await this.teamRepo.save(createdTeam)
+  }
+
+  private async getEvents (team: Team): Promise<Event[]> {
+    const reId = team.reId
+    const programId = team.program.id
+    const currentSeason = await this.seasonService.getCurrentSeason(programId)
+    const resource = `teams/${reId}/events`
+    const eventsToAdd = await this.re.paginated<EventResponse>(resource, { season: [currentSeason.reId] })
+
+    const eventPromises = eventsToAdd.map(async (event) => await this.eventService.createEventIfNotExists(event))
+    const events = await Promise.all(eventPromises)
+    team.events = events
+    await this.teamRepo.save(team)
+
+    return team.events
   }
 
   async findOneBy (where: FindOptionsWhere<Team>): Promise<Team> {
@@ -74,5 +95,29 @@ export class TeamService {
 
   async findAll (args: FindTeamsArgs): Promise<Team[]> {
     return await this.teamRepo.findBy(args)
+  }
+
+  async findEvents (team: Team): Promise<Event[]> {
+    const id = team.id
+
+    const stored = await this.teamRepo.findOne({ where: { id }, relations: ['events', 'program'] })
+
+    if (stored === null) {
+      throw new NotFoundException('Team not found')
+    }
+
+    const events = stored.events
+
+    if (events.length > 0) {
+      return events
+    }
+
+    // Don't bother fetching events if the team isn't registered for the current season
+    if (!stored.registered) {
+      return []
+    }
+
+    this.logger.log(`Fetching events for team ${team.number}`)
+    return await this.getEvents(stored)
   }
 }

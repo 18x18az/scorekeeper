@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, Unique } from 'typeorm'
 import { GenericObject } from '../utils/object-type'
 import { Region } from '../region/region.entity'
@@ -29,7 +29,12 @@ export class Team extends GenericObject {
   @Field()
     organization: string
 
+  @Column()
+  @Field(() => Int)
+    regionId: number
+
   @ManyToOne(() => Region, region => region.teams)
+  @JoinColumn({ name: 'regionId' })
   @Field(type => Region)
     region: Region
 

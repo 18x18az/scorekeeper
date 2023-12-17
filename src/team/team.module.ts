@@ -6,12 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Team } from './team.entity'
 import { ProgramModule } from '../program/program.module'
 import { RegionModule } from '../region/region.module'
+import { SeasonModule } from '../season/season.module'
+import { EventModule } from '../event/event.module'
 
 @Module({
   imports: [ReModule,
     TypeOrmModule.forFeature([Team]),
     ProgramModule,
-    RegionModule
+    RegionModule,
+    SeasonModule,
+    EventModule
   ],
   providers: [TeamService, TeamResolver]
 })

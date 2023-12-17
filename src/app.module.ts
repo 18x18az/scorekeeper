@@ -3,7 +3,6 @@ import { EventModule } from './event/event.module'
 import { RegionModule } from './region/region.module'
 import { TeamModule } from './team/team.module'
 import { GraphQLModule } from '@nestjs/graphql'
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule } from '@nestjs/config'
@@ -11,6 +10,7 @@ import { SeasonModule } from './season/season.module'
 import { ReModule } from './re/re.module'
 import { ProgramModule } from './program/program.module'
 import { LocationModule } from './location/location.module'
+import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius'
 
 @Module({
   imports: [
@@ -20,10 +20,12 @@ import { LocationModule } from './location/location.module'
     ConfigModule.forRoot({
       isGlobal: true
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+    GraphQLModule.forRoot<MercuriusDriverConfig>({
+      driver: MercuriusDriver,
+      graphiql: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      sortSchema: true
+      sortSchema: true,
+      cache: true
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
@@ -36,7 +38,8 @@ import { LocationModule } from './location/location.module'
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
         synchronize: true,
         ssl: true,
-        retryWrites: false
+        retryWrites: false,
+        cache: true
       })
     }),
     SeasonModule,

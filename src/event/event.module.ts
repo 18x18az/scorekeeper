@@ -16,6 +16,7 @@ import { EventResolver } from './event.resolver'
     RegionModule,
     LocationModule
   ],
-  providers: [EventService, EventResolver]
+  providers: [EventService, EventResolver],
+  exports: [EventService]
 })
 export class EventModule {}

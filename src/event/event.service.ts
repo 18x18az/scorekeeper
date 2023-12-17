@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common'
 import { SeasonService } from '../season/season.service'
 import { Season } from '../season/season.entity'
 import { ReService } from '../re/re.service'
-import { LocationResponse } from '../location/location.interface'
 import { RegionService } from '../region/region.service'
 import { LocationService } from '../location/location.service'
 import { Event } from './event.entity'
@@ -10,20 +9,8 @@ import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreateEventInput } from './dto/create-event.input'
 import { FindEventsArgs } from './dto/find-events.args'
-import { EventLevel, EventType } from './dto/event.enums'
+import { EventResponse } from './dto/event.response'
 
-interface EventResponse {
-  id: number
-  sku: string
-  name: string
-  start: string
-  end: string
-  location: LocationResponse
-  level: EventLevel
-  ongoing: boolean
-  awards_finalized: boolean
-  event_type: EventType | null
-}
 @Injectable()
 export class EventService {
   private readonly logger: Logger = new Logger(EventService.name)
@@ -35,6 +22,39 @@ export class EventService {
     private readonly location: LocationService,
     @InjectRepository(Event) private readonly eventRepo: Repository<Event>
   ) {}
+
+  async createEventIfNotExists (reInput: EventResponse): Promise<Event> {
+    const existing = await this.eventRepo.findOneBy({ reId: reInput.id })
+
+    if (existing !== null) {
+      return existing
+    }
+
+    this.logger.log(`Creating event ${reInput.name}`)
+
+    const regionName = reInput.location.region
+    const country = reInput.location.country
+
+    const regionId = (await this.region.createRegionIfNotExists({ country: { name: country }, name: regionName })).id
+    const locationId = (await this.location.createIfNotExists(reInput.location)).id
+
+    const eventCreate: CreateEventInput = {
+      reId: reInput.id,
+      sku: reInput.sku,
+      name: reInput.name,
+      start: reInput.start,
+      end: reInput.end,
+      locationId,
+      regionId,
+      level: reInput.level,
+      ongoing: reInput.ongoing,
+      awardsFinalized: reInput.awards_finalized,
+      eventType: reInput.event_type
+    }
+
+    const newEvent = this.eventRepo.create(eventCreate)
+    return await this.eventRepo.save(newEvent)
+  }
 
   private async handleEvent (event: EventResponse): Promise<void> {
     const existing = await this.eventRepo.findOneBy({ reId: event.id })
@@ -49,16 +69,7 @@ export class EventService {
     const country = event.location.country
 
     const regionId = (await this.region.createRegionIfNotExists({ country: { name: country }, name: regionName })).id
-    const locationId = (await this.location.createIfNotExists({
-      venue: event.location.venue,
-      address: event.location.address_1,
-      city: event.location.city,
-      region: regionName,
-      postcode: event.location.postcode,
-      country,
-      latitude: event.location.coordinates.lat,
-      longitude: event.location.coordinates.lon
-    })).id
+    const locationId = (await this.location.createIfNotExists(event.location)).id
 
     const eventCreate: CreateEventInput = {
       reId: event.id,
