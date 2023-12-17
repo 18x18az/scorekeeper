@@ -41,7 +41,6 @@ enum EventLevel {
 
 enum EventType {
   LEAGUE
-  NULL
   TOURNAMENT
   VIRTUAL
   WORKSHOP
@@ -79,12 +78,10 @@ type Query {
   countries: [Country!]!
   country(id: Int!): Country!
   countryByName(name: String!): Country!
-  findAllProgram: [Program!]!
-  findAllSeason: [Season!]!
-  findAllTeam: [Team!]!
-  findOneProgram: Program!
-  findOneSeason: Season!
-  findOneTeam: Team!
+  findAllEvents(awardsFinalized: Boolean, eventLevel: EventLevel, eventType: EventType, locationId: Int, name: String, ongoing: Boolean, regionId: Int): [Event!]!
+  findAllPrograms: [Program!]!
+  findAllSeasons: [Season!]!
+  findAllTeams(grade: Grade, organization: String, programId: Int, regionId: Int, registered: Boolean): [Team!]!
   findTeamByNumber(number: String!): Team!
   program(id: Int!): Program!
   programByCode(code: String!): Program!
@@ -95,7 +92,6 @@ type Query {
 }
 
 type Region {
-  country: Country!
   events: [Event!]!
   id: Int!
   name: String!

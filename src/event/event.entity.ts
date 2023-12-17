@@ -1,34 +1,10 @@
-import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
 import { GenericObject } from '../utils/object-type'
 import { Region } from '../region/region.entity'
 import { Location } from '../location/location.entity'
 import { Team } from '../team/team.entity'
-
-export enum EventLevel {
-  WORLD = 'World',
-  NATIONAL = 'National',
-  REGIONAL = 'Regional',
-  STATE = 'State',
-  SIGNATURE = 'Signature',
-  OTHER = 'Other'
-}
-
-export enum EventType {
-  TOURNAMENT = 'tournament',
-  LEAGUE = 'league',
-  WORKSHOP = 'workshop',
-  VIRTUAL = 'virtual',
-  NULL = 'null'
-}
-
-registerEnumType(EventLevel, {
-  name: 'EventLevel'
-})
-
-registerEnumType(EventType, {
-  name: 'EventType'
-})
+import { EventLevel, EventType } from './dto/event.enums'
 
 @ObjectType()
 @Entity()

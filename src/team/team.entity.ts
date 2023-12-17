@@ -1,21 +1,10 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { Field, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, Unique } from 'typeorm'
 import { GenericObject } from '../utils/object-type'
 import { Region } from '../region/region.entity'
 import { Program } from '../program/program.entity'
-import { Location } from '../location/location.entity'
 import { Event } from '../event/event.entity'
-
-export enum Grade {
-  COLLEGe = 'College',
-  HIGH_SCHOOL = 'High School',
-  MIDDLE_SCHOOL = 'Middle School',
-  ELEMENTARY_SCHOOL = 'Elementary School'
-}
-
-registerEnumType(Grade, {
-  name: 'Grade'
-})
+import { Grade } from './dto/team.enums'
 
 @ObjectType()
 @Entity()

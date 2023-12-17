@@ -6,6 +6,7 @@ import { RegionModule } from '../region/region.module'
 import { LocationModule } from '../location/location.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Event } from './event.entity'
+import { EventResolver } from './event.resolver'
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { Event } from './event.entity'
     RegionModule,
     LocationModule
   ],
-  providers: [EventService]
+  providers: [EventService, EventResolver]
 })
 export class EventModule {}

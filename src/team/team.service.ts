@@ -1,11 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Grade, Team } from './team.entity'
 import { FindOptionsWhere, Repository } from 'typeorm'
 import { ReService } from '../re/re.service'
 import { ProgramService } from '../program/program.service'
 import { LocationResponse } from '../location/location.interface'
 import { RegionService } from '../region/region.service'
+import { FindTeamsArgs } from './dto/find-teams.args'
+import { Team } from './team.entity'
+import { Grade } from './dto/team.enums'
 
 interface TeamResponse {
   id: number
@@ -68,5 +70,9 @@ export class TeamService {
     }
 
     throw new NotFoundException('Team not found')
+  }
+
+  async findAll (args: FindTeamsArgs): Promise<Team[]> {
+    return await this.teamRepo.findBy(args)
   }
 }

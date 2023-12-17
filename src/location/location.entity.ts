@@ -2,7 +2,6 @@ import { Field, Float, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, OneToMany } from 'typeorm'
 import { GenericObject } from '../utils/object-type'
 import { Event } from '../event/event.entity'
-import { Team } from '../team/team.entity'
 
 @Entity()
 @ObjectType()

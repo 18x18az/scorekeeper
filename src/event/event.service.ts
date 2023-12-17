@@ -5,10 +5,12 @@ import { ReService } from '../re/re.service'
 import { LocationResponse } from '../location/location.interface'
 import { RegionService } from '../region/region.service'
 import { LocationService } from '../location/location.service'
-import { EventLevel, Event, EventType } from './event.entity'
+import { Event } from './event.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreateEventInput } from './dto/create-event.input'
+import { FindEventsArgs } from './dto/find-events.args'
+import { EventLevel, EventType } from './dto/event.enums'
 
 interface EventResponse {
   id: number
@@ -69,7 +71,7 @@ export class EventService {
       level: event.level,
       ongoing: event.ongoing,
       awardsFinalized: event.awards_finalized,
-      eventType: event.event_type ? event.event_type : EventType.NULL
+      eventType: event.event_type
     }
 
     const newEvent = this.eventRepo.create(eventCreate)
@@ -90,5 +92,9 @@ export class EventService {
     // for (const season of currentSeasons) {
     //   await this.getEvents(season)
     // }
+  }
+
+  async findAll (args: FindEventsArgs): Promise<Event[]> {
+    return await this.eventRepo.findBy(args)
   }
 }

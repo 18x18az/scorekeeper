@@ -13,7 +13,6 @@ export class Region extends GenericObject {
     name: string
 
   @ManyToOne(() => Country, country => country.regions)
-  @Field(type => Country)
     country: Country
 
   @OneToMany(() => Event, event => event.region)

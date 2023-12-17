@@ -1,5 +1,5 @@
 import { InputType } from '@nestjs/graphql'
-import { EventLevel, EventType } from '../event.entity'
+import { EventLevel, EventType } from './event.enums'
 
 @InputType()
 export class CreateEventInput {
@@ -13,5 +13,5 @@ export class CreateEventInput {
   level: EventLevel
   ongoing: boolean
   awardsFinalized: boolean
-  eventType: EventType
+  eventType: EventType | null
 }
