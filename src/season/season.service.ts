@@ -14,13 +14,6 @@ interface SeasonResponse {
   years_end: number
 }
 
-interface SeasonsResponse {
-  meta: {
-    current_page: number
-  }
-  data: SeasonResponse[]
-}
-
 @Injectable()
 export class SeasonService {
   private readonly logger: Logger = new Logger(SeasonService.name)
@@ -31,7 +24,7 @@ export class SeasonService {
     @InjectRepository(Season) private readonly seasonRepo: Repository<Season>
   ) {}
 
-  async onApplicationBootstrap (): Promise<void> {
+  async hydrateSeasons (): Promise<void> {
     await this.programs.hydratePrograms()
     this.logger.log('Checking for current seasons')
     const programs = await this.programs.findAll()
@@ -46,7 +39,7 @@ export class SeasonService {
       }
 
       this.logger.log(`No current season for ${program.name}`)
-      const currentSeason = (await this.re.getRequest<SeasonsResponse>('seasons', { active: true, program: [program.reId] })).data[0]
+      const currentSeason = (await this.re.getRequest<SeasonResponse>('seasons', { active: true, program: [program.reId] }))[0]
       await this.create(program, { name: currentSeason.name, yearStart: currentSeason.years_start, yearEnd: currentSeason.years_end, reId: currentSeason.id, isCurrent: true })
       this.logger.log(`Created season ${currentSeason.name} for ${program.name}`)
     }
@@ -67,5 +60,9 @@ export class SeasonService {
 
   async findByProgram (programId: number): Promise<Season[]> {
     return await this.seasonRepo.find({ where: { programId } })
+  }
+
+  async findCurrent (): Promise<Season[]> {
+    return await this.seasonRepo.find({ where: { isCurrent: true } })
   }
 }

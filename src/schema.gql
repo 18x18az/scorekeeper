@@ -8,6 +8,57 @@ type Country {
   regions: [Region!]
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Event {
+  awardsFinalized: Boolean!
+  end: DateTime!
+  eventType: EventType!
+  id: Int!
+  level: EventLevel!
+  location: Location!
+  locationId: Int!
+  name: String!
+  ongoing: Boolean!
+  region: Region!
+  regionId: Int!
+  sku: String!
+  start: DateTime!
+}
+
+enum EventLevel {
+  NATIONAL
+  OTHER
+  REGIONAL
+  SIGNATURE
+  STATE
+  WORLD
+}
+
+enum EventType {
+  LEAGUE
+  NULL
+  TOURNAMENT
+  VIRTUAL
+  WORKSHOP
+}
+
+type Location {
+  address: String!
+  city: String!
+  country: String!
+  events: [Event!]!
+  id: Int!
+  latitude: Float!
+  longitude: Float!
+  postcode: String!
+  region: String!
+  venue: String!
+}
+
 type Program {
   code: String!
   id: Int!
@@ -33,6 +84,7 @@ type Query {
 
 type Region {
   country: Country!
+  events: [Event!]!
   id: Int!
   name: String!
 }

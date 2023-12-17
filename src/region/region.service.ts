@@ -45,7 +45,13 @@ export class RegionService {
     return await this.countryRepo.save(newCountry)
   }
 
-  async createRegion (createRegionInput: CreateRegionInput): Promise<Region> {
+  async createRegionIfNotExists (createRegionInput: CreateRegionInput): Promise<Region> {
+    const region = await this.regionRepo.findOneBy({ name: createRegionInput.name })
+
+    if (region !== null) {
+      return region
+    }
+
     this.logger.log(`Creating region ${createRegionInput.name} in country ${createRegionInput.country.name}`)
 
     let country = await this.countryRepo.findOneBy({ name: createRegionInput.country.name })

@@ -13,10 +13,6 @@ interface ProgramResponse {
   name: string
 }
 
-interface ProgramsResponse {
-  data: ProgramResponse[]
-}
-
 @Injectable()
 export class ProgramService {
   private readonly logger: Logger = new Logger(ProgramService.name)
@@ -38,7 +34,7 @@ export class ProgramService {
     }
 
     this.logger.log(`Missing programs: ${missing.join(', ')}`)
-    const allPrograms = (await this.re.getRequest<ProgramsResponse>('programs')).data
+    const allPrograms = (await this.re.getRequest<ProgramResponse>('programs'))
 
     for (const program of allPrograms) {
       if (missing.includes(program.abbr)) {

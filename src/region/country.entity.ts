@@ -1,15 +1,12 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql'
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Field, ObjectType } from '@nestjs/graphql'
+import { Column, Entity, OneToMany } from 'typeorm'
 import { Region } from './region.entity'
+import { GenericObject } from '../utils/object-type'
 
 @Entity()
 @ObjectType()
-export class Country {
-  @PrimaryGeneratedColumn()
-  @Field(() => Int)
-    id: number
-
-  @Column()
+export class Country extends GenericObject {
+  @Column({ unique: true })
   @Field()
     name: string
 

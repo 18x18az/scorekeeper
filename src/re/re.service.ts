@@ -4,6 +4,13 @@ import { firstValueFrom } from 'rxjs'
 
 const BASE_URL = 'https://www.robotevents.com/api/v2'
 
+interface Response<T> {
+  meta: {
+    current_page: number
+  }
+  data: T[]
+}
+
 @Injectable()
 export class ReService {
   private readonly API_KEY = process.env.RE_API_KEY as string
@@ -16,14 +23,14 @@ export class ReService {
 
   constructor (private readonly http: HttpService) {}
 
-  async getRequest<T>(resource: string, params?: Object): Promise<T> {
+  async getRequest<T>(resource: string, params?: Object): Promise<T[]> {
     const url = `${BASE_URL}/${resource}`
     const config = { ...this.config, params }
     const observable = this.http.get<T>(
       url,
       config
     )
-    const response = await firstValueFrom(observable)
+    const response = (await firstValueFrom(observable)).data as Response<T>
     return response.data
   }
 }

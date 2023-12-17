@@ -9,14 +9,14 @@ export class Program {
   @Field(type => Int)
     id: number
 
-  @Column()
+  @Column({ unique: true })
     reId: number
 
   @Column()
   @Field()
     name: string
 
-  @Column()
+  @Column({ unique: true })
   @Field()
     code: string
 

@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config'
 import { SeasonModule } from './season/season.module'
 import { ReModule } from './re/re.module'
 import { ProgramModule } from './program/program.module'
+import { LocationModule } from './location/location.module'
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { ProgramModule } from './program/program.module'
     }),
     SeasonModule,
     ReModule,
-    ProgramModule
+    ProgramModule,
+    LocationModule
   ]
 })
 export class AppModule {}

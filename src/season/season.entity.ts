@@ -13,7 +13,7 @@ export class Season {
   @Field()
     name: string
 
-  @Column()
+  @Column({ unique: true })
     reId: number
 
   @Column()
