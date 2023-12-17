@@ -78,7 +78,7 @@ export class EventService {
 
   private async getEvents (season: Season): Promise<void> {
     this.logger.log(`Getting events for ${season.name}`)
-    const events = await this.re.getRequest<EventResponse>('events', { season: [season.reId] })
+    const events = await this.re.paginated<EventResponse>('events', { season: [season.reId] })
     await this.handleEvent(events[8])
   }
 

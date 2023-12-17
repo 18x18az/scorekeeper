@@ -27,6 +27,7 @@ type Event {
   regionId: Int!
   sku: String!
   start: DateTime!
+  teams: [Team!]!
 }
 
 enum EventLevel {
@@ -44,6 +45,13 @@ enum EventType {
   TOURNAMENT
   VIRTUAL
   WORKSHOP
+}
+
+enum Grade {
+  COLLEGe
+  ELEMENTARY_SCHOOL
+  HIGH_SCHOOL
+  MIDDLE_SCHOOL
 }
 
 type Location {
@@ -64,6 +72,7 @@ type Program {
   id: Int!
   name: String!
   seasons: [Season!]!
+  teams: [Team!]!
 }
 
 type Query {
@@ -72,8 +81,11 @@ type Query {
   countryByName(name: String!): Country!
   findAllProgram: [Program!]!
   findAllSeason: [Season!]!
+  findAllTeam: [Team!]!
   findOneProgram: Program!
   findOneSeason: Season!
+  findOneTeam: Team!
+  findTeamByNumber(number: String!): Team!
   program(id: Int!): Program!
   programByCode(code: String!): Program!
   programs: [Program!]!
@@ -87,6 +99,7 @@ type Region {
   events: [Event!]!
   id: Int!
   name: String!
+  teams: [Team!]!
 }
 
 type Season {
@@ -97,4 +110,17 @@ type Season {
   programId: Int!
   yearEnd: Int!
   yearStart: Int!
+}
+
+type Team {
+  events: [Event!]!
+  grade: Grade!
+  id: Int!
+  name: String!
+  number: String!
+  organization: String!
+  program: Program!
+  region: Region!
+  registered: Boolean!
+  robotName: String
 }

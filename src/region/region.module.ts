@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { RegionResolver } from './regin.resolver'
+import { RegionResolver } from './region.resolver'
 import { RegionService } from './region.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Country } from './country.entity'

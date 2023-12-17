@@ -30,7 +30,8 @@ export class SeasonService {
     const programs = await this.programs.findAll()
 
     for (const program of programs) {
-      const existing = await this.seasonRepo.find({ where: { program } })
+      const { id } = program
+      const existing = await this.seasonRepo.find({ where: { programId: id } })
 
       const current = existing.find(s => s.isCurrent)
       if (current !== undefined) {
@@ -39,7 +40,7 @@ export class SeasonService {
       }
 
       this.logger.log(`No current season for ${program.name}`)
-      const currentSeason = (await this.re.getRequest<SeasonResponse>('seasons', { active: true, program: [program.reId] }))[0]
+      const currentSeason = (await this.re.paginated<SeasonResponse>('seasons', { active: true, program: [program.reId] }))[0]
       await this.create(program, { name: currentSeason.name, yearStart: currentSeason.years_start, yearEnd: currentSeason.years_end, reId: currentSeason.id, isCurrent: true })
       this.logger.log(`Created season ${currentSeason.name} for ${program.name}`)
     }

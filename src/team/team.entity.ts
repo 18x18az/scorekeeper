@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, Unique } from 'typeorm'
 import { GenericObject } from '../utils/object-type'
 import { Region } from '../region/region.entity'
 import { Program } from '../program/program.entity'
@@ -19,11 +19,12 @@ registerEnumType(Grade, {
 
 @ObjectType()
 @Entity()
+@Unique(['number', 'program'])
 export class Team extends GenericObject {
   @Column({ unique: true })
     reId: number
 
-  @Column({ unique: true })
+  @Column()
   @Field()
     number: string
 
@@ -31,9 +32,9 @@ export class Team extends GenericObject {
   @Field()
     name: string
 
-  @Column()
-  @Field()
-    robotName: string
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+    robotName?: string
 
   @Column()
   @Field()
@@ -43,15 +44,12 @@ export class Team extends GenericObject {
   @Field(type => Region)
     region: Region
 
-  @ManyToOne(() => Location, location => location.teams)
-  @Field(type => Location)
-    location: Location
-
   @Column()
   @Field()
     registered: boolean
 
   @ManyToOne(() => Program, program => program.teams)
+  @JoinColumn({ name: 'programId' })
   @Field(type => Program)
     program: Program
 
@@ -59,7 +57,7 @@ export class Team extends GenericObject {
   @Field(type => Grade)
     grade: Grade
 
-  @ManyToMany(() => Event, event => event.teams, { cascade: true })
+  @ManyToMany(() => Event, event => event.teams)
   @Field(type => [Event])
     events: Event[]
 }

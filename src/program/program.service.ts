@@ -3,7 +3,7 @@ import { ReService } from '../re/re.service'
 import { Program } from './program.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreateProgramInput } from './dto/create-program.input'
-import { Repository } from 'typeorm'
+import { FindOptionsWhere, Repository } from 'typeorm'
 
 const SUPPORTED_PROGRAMS = ['VRC', 'VEXU']
 
@@ -34,7 +34,7 @@ export class ProgramService {
     }
 
     this.logger.log(`Missing programs: ${missing.join(', ')}`)
-    const allPrograms = (await this.re.getRequest<ProgramResponse>('programs'))
+    const allPrograms = (await this.re.paginated<ProgramResponse>('programs'))
 
     for (const program of allPrograms) {
       if (missing.includes(program.abbr)) {
@@ -59,5 +59,9 @@ export class ProgramService {
 
   async findByCode (code: string): Promise<Program> {
     return await this.programRepo.findOneByOrFail({ code })
+  }
+
+  async findOneBy (where: FindOptionsWhere<Program>): Promise<Program> {
+    return await this.programRepo.findOneByOrFail(where)
   }
 }

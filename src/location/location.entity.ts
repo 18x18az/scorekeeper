@@ -42,8 +42,4 @@ export class Location extends GenericObject {
   @OneToMany(() => Event, event => event.location)
   @Field(type => [Event])
     events: Event[]
-
-  @OneToMany(() => Team, team => team.location)
-  @Field(type => [Team])
-    teams: Team[]
 }

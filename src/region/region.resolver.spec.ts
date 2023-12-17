@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { RegionResolver } from './regin.resolver'
+import { RegionResolver } from './region.resolver'
 
 describe('RegionResolver', () => {
   let resolver: RegionResolver
