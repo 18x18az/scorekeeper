@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
 import { GenericObject } from '../utils/object-type'
 import { Region } from '../region/region.entity'
 import { Location } from '../location/location.entity'
+import { Team } from '../team/team.entity'
 
 export enum EventLevel {
   WORLD = 'World',
@@ -84,4 +85,9 @@ export class Event extends GenericObject {
   @JoinColumn({ name: 'locationId' })
   @Field(type => Location)
     location: Location
+
+  @ManyToMany(() => Team, team => team.events, { cascade: true })
+  @JoinTable()
+  @Field(type => [Team])
+    teams: Team[]
 }

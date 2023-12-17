@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Season } from '../season/season.entity'
+import { Team } from '../team/team.entity'
 
 @Entity()
 @ObjectType()
@@ -23,4 +24,8 @@ export class Program {
   @OneToMany(() => Season, season => season.program)
   @Field(type => [Season])
     seasons: Season[]
+
+  @OneToMany(() => Team, team => team.program)
+  @Field(type => [Team])
+    teams: Team[]
 }
